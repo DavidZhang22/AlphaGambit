@@ -1,2 +1,1 @@
 # AlphaGambit
-Haskell chess Engine
