@@ -1,2 +1,7 @@
+import Lib (generateGame, randomCommand)
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do
+  game <- generateGame
+  randomMove <- randomCommand game
+  putStrLn randomMove
