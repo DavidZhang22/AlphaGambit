@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib (randomCommand, generateGame)
+import Lib (generateGame, randomCommand)
 import System.Environment (getArgs, getProgName)
 import System.Exit (die)
 

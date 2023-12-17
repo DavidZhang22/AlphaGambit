@@ -3,6 +3,7 @@ module Lib
     jamboree,
     minimax,
     randomCommand,
+    heuristic,
   )
 where
 
@@ -19,6 +20,7 @@ import Chess.Rulebook (Rulebook (..))
 import Chess.Rulebook.Standard (standardRulebook)
 import Chess.Rulebook.Standard.Movement (movements)
 import Chess.Some (Some (Some))
+import Functions.Scoring (heuristic)
 
 generateGame_ :: Rulebook -> Game
 generateGame_ (Rulebook newGameFunc _ _) = newGameFunc
@@ -35,7 +37,8 @@ allMoves game@(Game board (Player color) _ _) = result
     result = concat [movements piece game | Some piece <- pieces]
 
 randomCommand :: Game -> Command
-randomCommand game = head $ allMoves game
+-- get the middle element of the list of all moves
+randomCommand game = allMoves game !! (length (allMoves game) `div` 2)
 
 minimax :: Game -> Int -> Player -> Command
 minimax game depth player = randomCommand game -- TODO: implement this
