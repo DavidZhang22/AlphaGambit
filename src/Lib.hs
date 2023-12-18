@@ -4,6 +4,7 @@ module Lib
     minimax,
     randomCommand,
     heuristic,
+    nextStates,
   )
 where
 
@@ -35,12 +36,17 @@ allUpdates game rulebook =
       potentialUpdates (Some (PlacedPiece position _)) = rulebook.updates position game
    in concatMap potentialUpdates $ filter sameColor $ pieces game.board
 
+nextStates :: Game -> [(Update, Int)]
+nextStates game =
+  let updates = allUpdates game standardRulebook
+   in map (\update -> (update, heuristic update.game)) updates
+
 randomCommand :: Game -> Update
 -- get the middle element of the list of all moves
 randomCommand game = head $ allUpdates game standardRulebook
 
 minimax :: Game -> Int -> Player -> Update
-minimax game depth player = randomCommand game -- TODO: implement this
+minimax game _ _ = randomCommand game -- TODO: implement this
 
 jamboree :: Game -> Int -> Int -> Player -> Update
 jamboree game _ _ _ = randomCommand game -- TODO: implement this

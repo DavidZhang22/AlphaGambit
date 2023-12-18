@@ -10,8 +10,8 @@ main = do
 
   case args of
     [move] -> do
-      let game = generateGame
-      let randomMove = randomCommand game
+      -- let game = generateGame
+      -- let randomMove = randomCommand game
       print "whjatever"
     _ -> do
       name <- getProgName

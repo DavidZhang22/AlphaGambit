@@ -2,14 +2,10 @@
 
 module Functions.Scoring (heuristic) where
 
-import Chess.Board (PlacedPiece (..), piecesOf)
-import Chess.Game (Game (..))
-import Chess.Piece (Piece (..), PieceType (..))
-import Chess.Player (Player (..))
-import Chess.Some (Some (Some))
+import Chess
 
 heuristic :: Game -> Int
-heuristic (Game board (Player c1) (Player c2) _) = values (piecesOf c1 board) (piecesOf c2 board)
+heuristic (Game board _ _ _) = values (piecesOf White board) (piecesOf Black board)
   where
     values p1 p2 = value p1 - value p2
     value pieces = sum [pieceValue piece | piece <- pieces]
