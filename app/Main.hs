@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib (generateGame, randomCommand)
+-- import Lib (generateGame, randomCommand)
 import System.Environment (getArgs, getProgName)
 import System.Exit (die)
 
@@ -9,7 +9,7 @@ main = do
   args <- getArgs
 
   case args of
-    [move] -> do
+    [] -> do
       -- let game = generateGame
       -- let randomMove = randomCommand game
       print "whjatever"

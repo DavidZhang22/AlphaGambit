@@ -9,7 +9,7 @@ heuristic :: Game -> Int
 heuristic (Game board _ _ _) = values (piecesOf White board) (piecesOf Black board)
   where
     values p1 p2 = value p1 - value p2
-    value pieces = sum [pieceValue piece | piece <- pieces]
+    value pieces_ = sum [pieceValue piece | piece <- pieces_]
     pieceValue :: Some PlacedPiece -> Int
     pieceValue (Some (PlacedPiece _ (Piece piece _))) = case piece of
       Pawn -> 1
