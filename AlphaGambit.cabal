@@ -26,6 +26,8 @@ source-repository head
 library
   exposed-modules:
       Functions.Scoring
+      Functions.Search
+      Functions.States
       Lib
   other-modules:
       Paths_AlphaGambit
