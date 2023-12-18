@@ -12,14 +12,13 @@ where
 -- import Chess.Rulebook.Standard (standardRulebook)
 -- import Chess.Rulebook (Rulebook (..))
 
-import Chess.Board (piecesOf)
-import Chess.Game (Game (..))
-import Chess.Game.Command (Command)
-import Chess.Player (Player (..))
-import Chess.Rulebook (Rulebook (..))
+-- import Chess.Board (PlacedPiece (PlacedPiece), piecesOf)
+-- import Chess.Game (Game (..), Update)
+-- import Chess.Player (Player (..))
+-- import Chess.Rulebook (Rulebook (..))
+import Chess
 import Chess.Rulebook.Standard (standardRulebook)
-import Chess.Rulebook.Standard.Movement (movements)
-import Chess.Some (Some (Some))
+-- import Chess.Some (Some (Some))
 import Functions.Scoring (heuristic)
 
 generateGame_ :: Rulebook -> Game
@@ -30,18 +29,18 @@ generateGame = generateGame_ standardRulebook
 
 -- generateGame = newGame standardRulebook
 
-allMoves :: Game -> [Command]
-allMoves game@(Game board (Player color) _ _) = result
-  where
-    pieces = piecesOf color board
-    result = concat [movements piece game | Some piece <- pieces]
+allUpdates :: Game -> Rulebook -> [Update]
+allUpdates game rulebook =
+  let sameColor (Some (PlacedPiece _ piece)) = piece.color == game.activePlayer.color
+      potentialUpdates (Some (PlacedPiece position _)) = rulebook.updates position game
+   in concatMap potentialUpdates $ filter sameColor $ pieces game.board
 
-randomCommand :: Game -> Command
+randomCommand :: Game -> Update
 -- get the middle element of the list of all moves
-randomCommand game = allMoves game !! (length (allMoves game) `div` 2)
+randomCommand game = head $ allUpdates game standardRulebook
 
-minimax :: Game -> Int -> Player -> Command
+minimax :: Game -> Int -> Player -> Update
 minimax game depth player = randomCommand game -- TODO: implement this
 
-jamboree :: Game -> Int -> Int -> Player -> Command
+jamboree :: Game -> Int -> Int -> Player -> Update
 jamboree game _ _ _ = randomCommand game -- TODO: implement this

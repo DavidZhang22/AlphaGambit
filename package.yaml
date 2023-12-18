@@ -5,6 +5,7 @@ license: BSD-3-Clause
 author: "Author name here"
 maintainer: "example@example.com"
 copyright: "2023 Author name here"
+language: GHC2021
 
 extra-source-files:
   - README.md
@@ -22,6 +23,11 @@ description: Please see the README on GitHub at <https://github.com/githubuser/A
 dependencies:
   - base >= 4.7 && < 5
   - chessica
+
+default-extensions:
+  - OverloadedRecordDot
+  - DuplicateRecordFields
+  - NoFieldSelectors
 
 ghc-options:
   - -Wall

@@ -12,7 +12,7 @@ main = do
     [move] -> do
       let game = generateGame
       let randomMove = randomCommand game
-      print randomMove
+      print "whjatever"
     _ -> do
       name <- getProgName
       die $ "Usage: " ++ name ++ " <move>"
