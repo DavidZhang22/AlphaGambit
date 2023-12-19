@@ -1,6 +1,7 @@
 module Main (main) where
 
--- import Lib (generateGame, randomCommand)
+import Chess
+import Lib (generateGame, minimax)
 import System.Environment (getArgs, getProgName)
 import System.Exit (die)
 
@@ -9,10 +10,11 @@ main = do
   args <- getArgs
 
   case args of
-    [] -> do
-      -- let game = generateGame
-      -- let randomMove = randomCommand game
-      print "whjatever"
+    [_] -> do
+      let game = generateGame
+      let minimaxUpdate = minimax game 3 game.activePlayer
+      putStrLn "Minimax update:"
+      putStrLn $ show minimaxUpdate.command
     _ -> do
       name <- getProgName
       die $ "Usage: " ++ name ++ " <move>"

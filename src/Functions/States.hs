@@ -4,11 +4,8 @@ import Chess
 import Chess.Rulebook.Standard (standardRulebook)
 import Functions.Scoring (heuristic)
 
-generateGame_ :: Rulebook -> Game
-generateGame_ (Rulebook newGameFunc _ _) = newGameFunc
-
 generateGame :: Game
-generateGame = generateGame_ standardRulebook
+generateGame = standardRulebook.newGame
 
 allUpdates :: Game -> Rulebook -> [Update]
 allUpdates game rulebook =
@@ -16,7 +13,8 @@ allUpdates game rulebook =
       potentialUpdates (Some (PlacedPiece position _)) = rulebook.updates position game
    in concatMap potentialUpdates $ filter sameColor $ pieces game.board
 
-nextStates :: Game -> [(Update, Int)]
-nextStates game =
-  let updates = allUpdates game standardRulebook
-   in map (\update -> (update, heuristic update.game)) updates
+nextStates :: Game -> [Update]
+nextStates game
+  | length updates == 0 = [Update game endTurn]
+  | otherwise = updates
+  where updates = allUpdates game standardRulebook

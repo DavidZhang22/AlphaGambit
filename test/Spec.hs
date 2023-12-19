@@ -1,6 +1,6 @@
 import Chess
 import Data.List (intercalate)
-import Lib (generateGame, heuristic, nextStates, randomCommand)
+import Lib (generateGame, heuristic, nextStates, randomCommand, minimax)
 
 main :: IO ()
 main = do
@@ -21,5 +21,12 @@ main = do
   putStrLn $ if score /= 0 then "OK" else "FAIL!"
 
   -- TEST 2: Next States function works
-  let potentialNextStates = nextStates loop100
-  putStrLn $ intercalate "\n" $ map (\(update, score) -> show update.command ++ ", " ++ show score) potentialNextStates
+--   let potentialNextStates = nextStates loop100
+--   putStrLn $ intercalate "\n" $ map (\(update) -> show update.command) potentialNextStates
+
+  -- Test 3: MinMax function
+  let futureUpdate = minimax game 5 game.activePlayer
+  putStrLn "Minimax update:"
+  putStrLn $ show futureUpdate.command
+
+
