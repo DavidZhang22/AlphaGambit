@@ -43,6 +43,7 @@ library
   build-depends:
       base >=4.7 && <5
     , chessica
+    , parallel
   default-language: GHC2021
 
 executable AlphaGambit-exe
@@ -62,6 +63,7 @@ executable AlphaGambit-exe
       AlphaGambit
     , base >=4.7 && <5
     , chessica
+    , parallel
   default-language: GHC2021
 
 test-suite AlphaGambit-test
@@ -82,4 +84,5 @@ test-suite AlphaGambit-test
       AlphaGambit
     , base >=4.7 && <5
     , chessica
+    , parallel
   default-language: GHC2021

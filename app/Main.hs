@@ -1,6 +1,7 @@
 module Main (main) where
 
 import Chess
+import Functions.Search (minimaxPar)
 import Lib (generateGame, minimax)
 import System.Environment (getArgs, getProgName)
 import System.Exit (die)
@@ -10,11 +11,16 @@ main = do
   args <- getArgs
 
   case args of
-    [_] -> do
+    ["sequential", d] -> do
       let game = generateGame
-      let minimaxUpdate = minimax game 3 game.activePlayer
+      let minimaxUpdate = minimax game (read d :: Int) game.activePlayer
       putStrLn "Minimax update:"
-      putStrLn $ show minimaxUpdate.command
+      print minimaxUpdate.command
+    ["parallel", d] -> do
+      let game = generateGame
+      let minimaxUpdate = minimaxPar game (read d :: Int) game.activePlayer
+      putStrLn "Minimax update:"
+      print minimaxUpdate.command
     _ -> do
       name <- getProgName
-      die $ "Usage: " ++ name ++ " <move>"
+      die $ "Usage: " ++ name ++ " <sequential|parallel> <depth=1,2,3,4,5>"
