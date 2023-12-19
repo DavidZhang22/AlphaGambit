@@ -39,12 +39,12 @@ minimaxPar game depth player
   | otherwise = snd $ findMinTuple $ map (\update -> (max_ (depth - 1) update.game, update)) (nextStates game)
   where
     max_ :: Int -> Game -> Int
-    max_ 0 game = heuristic game
-    max_ depth game = maximum (map (\update -> min_ (depth - 1) update.game) (nextStates game) `using` parList rseq)
+    max_ 0 game1 = heuristic game1
+    max_ d game2 = maximum (map (\update -> min_ (d - 1) update.game) (nextStates game2) `using` parList rseq)
 
     min_ :: Int -> Game -> Int
-    min_ 0 game = heuristic game
-    min_ depth game = minimum (map (\update -> max_ (depth - 1) update.game) (nextStates game) `using` parList rseq)
+    min_ 0 game1 = heuristic game1
+    min_ d game2 = minimum (map (\update -> max_ (d - 1) update.game) (nextStates game2) `using` parList rseq)
 
 jamboree :: Game -> Int -> Int -> Player -> Update
 jamboree game _ _ _ = randomCommand game -- TODO: implement this

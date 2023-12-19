@@ -6,7 +6,7 @@ import Chess
 
 -- Heuristic returns a positive score if white is winning, and a negative score if black is winning.
 heuristic :: Game -> Int
-heuristic (Game board _ _ _) = values (piecesOf White board) (piecesOf Black board)
+heuristic game = values (piecesOf White game.board) (piecesOf Black game.board)
   where
     values p1 p2 = value p1 - value p2
     value pieces_ = sum [pieceValue piece | piece <- pieces_]

@@ -2,7 +2,6 @@ module Functions.States (generateGame, nextStates) where
 
 import Chess
 import Chess.Rulebook.Standard (standardRulebook)
-import Functions.Scoring (heuristic)
 
 generateGame :: Game
 generateGame = standardRulebook.newGame
@@ -15,6 +14,6 @@ allUpdates game rulebook =
 
 nextStates :: Game -> [Update]
 nextStates game
-  | length updates == 0 = [Update game endTurn]
+  | null updates = [Update game endTurn]
   | otherwise = updates
   where updates = allUpdates game standardRulebook
