@@ -25,26 +25,27 @@ minimax game depth player
   | otherwise = snd $ findMinTuple $ map (\update -> (max_ (depth - 1) update.game, update)) (nextStates game)
   where
     max_ :: Int -> Game -> Int
-    max_ 0 game1 = heuristic game1
-    max_ d game1 = maximum (map (\update -> min_ (d - 1) update.game) (nextStates game1))
+    max_ 0 game_ = heuristic game_
+    max_ depth_ game_ = maximum (map (\update -> min_ (depth_ - 1) update.game) (nextStates game_))
 
     min_ :: Int -> Game -> Int
-    min_ 0 game1 = heuristic game1
-    min_ d game1 = minimum (map (\update -> max_ (d - 1) update.game) (nextStates game1))
-
+    min_ 0 game_ = heuristic game_
+    min_ depth_ game_ = minimum (map (\update -> max_ (depth_ - 1) update.game) (nextStates game_))
+minimax game _ _ = snd $ head $ map (\update -> (update, update)) (nextStates game)
+-- TODO: implement this
 
 minimaxPar :: Game -> Int -> Player -> Update
 minimaxPar game depth player
-  | player.color == Chess.Color.White = snd $ findMaxTuple $ map (\update -> (min_ (depth - 1) update.game, update)) (nextStates game)
-  | otherwise = snd $ findMinTuple $ map (\update -> (max_ (depth - 1) update.game, update)) (nextStates game)
+  | player.color == Chess.Color.White = snd $ findMaxTuple $ (map (\update -> (min_ (depth - 1) update.game, update)) (nextStates game) `using` parList rseq)
+  | otherwise = snd $ findMinTuple $ (map (\update -> (max_ (depth - 1) update.game, update)) (nextStates game) `using` parList rseq)
   where
     max_ :: Int -> Game -> Int
     max_ 0 game1 = heuristic game1
-    max_ d game2 = maximum (map (\update -> min_ (d - 1) update.game) (nextStates game2) `using` parList rdeepseq)
+    max_ d game2 = maximum (map (\update -> min_ (d - 1) update.game) (nextStates game2) `using` parListChunk 200 rdeepseq)
 
     min_ :: Int -> Game -> Int
     min_ 0 game1 = heuristic game1
-    min_ d game2 = minimum (map (\update -> max_ (d - 1) update.game) (nextStates game2) `using` parList rseq)
+    min_ d game2 = minimum (map (\update -> max_ (d - 1) update.game) (nextStates game2) `using` parListChunk 200 rdeepseq)
 
 
 
@@ -52,8 +53,8 @@ minimaxPar game depth player
 jamboree :: Game -> Int -> Player -> Update
 
 jamboree game depth player
-  | player.color == Chess.Color.White = snd $ findMaxTuple $ map (\update -> (jamboreee  update.game 10000 (-10000) (depth - 1), update)) (nextStates game)
-  | otherwise = snd $ findMinTuple $ map (\update -> (jamboreee  update.game 10000 (-10000) (depth - 1), update)) (nextStates game)
+  | player.color == Chess.Color.White = snd $ findMaxTuple $ map (\update -> (jamboreee  update.game (-10000) 10000 (depth - 1), update)) (nextStates game)
+  | otherwise = snd $ findMinTuple $ map (\update -> (jamboreee  update.game (-10000) 10000 (depth - 1), update)) (nextStates game)
 
   
 
@@ -64,14 +65,14 @@ jamboreee game a b depth   | firstVal >= b = firstVal
                            | otherwise = jamboree2 (max firstVal a) b firstVal
   where
     jamboree2 :: Int -> Int -> Int -> Int
-    jamboree2 alpha beta bb = maximum (map (\update-> result (-jamboreee update.game (-alpha-1) (-alpha) (depth - 1))) possibleMoves `using` parList rseq )
+    jamboree2 alpha beta bb = maximum (map (\update-> result (-jamboreee update.game (-alpha-1) (-alpha) (depth - 1))) possibleMoves `using` parListChunk 500 rseq )
       where
         result :: Int -> Int
         result res | res >= beta = res
                    | val >= beta = val
                    | otherwise = max (max val res) bb
           where
-            val = maximum (map (\update->(-jamboreee update.game (-beta) (-alpha) (depth - 1))) possibleMoves `using` parList rseq)
+            val = maximum (map (\update->(-jamboreee update.game (-beta) (-alpha) (depth - 1))) possibleMoves `using` parListChunk 500 rseq)
 
     firstVal = -jamboreee (head possibleMoves).game (-a) (-b) (depth - 1)
     possibleMoves = nextStates game
@@ -84,33 +85,34 @@ alphaBeta game depth player
   | otherwise = snd $ findMinTuple $ map (\update -> (maxValue update.game (depth-1) (-2) 2, update)) (nextStates game)
   where
     maxValue :: Game -> Int -> Int -> Int -> Int
-    maxValue game 0 _ _ = heuristic game
-    maxValue game depth a b =
-      let states = reverse $ nextStates game
+    maxValue g 0 _ _ = heuristic g
+    maxValue g d a b =
+      let states = reverse $ nextStates g
 
           getMinimaxAndAlpha :: (Int, Int) -> Update -> (Int, Int)
-          getMinimaxAndAlpha (bestMinimaxVal, a) update =
-            let newMinimax = max bestMinimaxVal (minValue update.game (depth - 1) a b)
+          getMinimaxAndAlpha (bestMinimaxVal, _) update =
+            let newMinimax = max bestMinimaxVal (minValue update.game (d - 1) a b)
              in (newMinimax, max a newMinimax)
 
-          (bestMinimax, newAlpha) = takeFirstWithOrLastElem (\(v, a) -> v >= b) $ scanl getMinimaxAndAlpha (-2, a) states
+          (bestMinimax, _) = takeFirstWithOrLastElem (\(v, _) -> v >= b) $ scanl getMinimaxAndAlpha (-2, a) states
        in bestMinimax
     minValue :: Game -> Int -> Int -> Int -> Int
     minValue _ 0 _ _ = heuristic game
-    minValue game depth a b =
-      let states = reverse $ nextStates game
+    minValue g d a b =
+      let states = reverse $ nextStates g
 
           getMinimaxAndBeta :: (Int, Int) -> Update -> (Int, Int)
-          getMinimaxAndBeta (bestMinimaxVal, b) update =
-            let newMinimax = min bestMinimaxVal (maxValue update.game (depth - 1) a b)
-             in (newMinimax, min b newMinimax)
+          getMinimaxAndBeta (bestMinimaxVal, b_) update =
+            let newMinimax = min bestMinimaxVal (maxValue update.game (d - 1) a b_)
+             in (newMinimax, min b_ newMinimax)
 
-          (bestMinimax, newBeta) =
-            takeFirstWithOrLastElem (\(v, b) -> v <= a) $
+          (bestMinimax, _) =
+            takeFirstWithOrLastElem (\(v, _) -> v <= a) $
               scanl getMinimaxAndBeta (2, b) states
        in bestMinimax
 
 -- will take the first element satisfying the condition, or the last element if none do (last wont be checked)
 takeFirstWithOrLastElem :: (a -> Bool) -> [a] -> a
-takeFirstWithOrLastElem cond [x] = x
+takeFirstWithOrLastElem _ [x] = x
 takeFirstWithOrLastElem cond (x : xs) = if cond x then x else takeFirstWithOrLastElem cond xs
+takeFirstWithOrLastElem _ [] = error "Empty list given"

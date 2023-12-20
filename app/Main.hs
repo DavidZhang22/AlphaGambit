@@ -41,13 +41,13 @@ main = do
 
 playGame :: Game -> IO ()
 playGame g = case standardRulebook.status g of
-  Win _ -> putStrLn $ "Win for " ++ show g.activePlayer.color
+  Win player -> putStrLn $ "Win for " ++ show player.color
   Draw -> putStrLn "Draw"
   Turn (Player White) -> do
     let (Update game command) = minimaxPar g 4 g.activePlayer
     print game.board
     playGame game
   Turn (Player Black) -> do
-    let (Update game command) = randomCommand g
+    let (Update game command) = minimaxPar g 4 g.activePlayer
     print game.board
     playGame game

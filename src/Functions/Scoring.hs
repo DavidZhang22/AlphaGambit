@@ -22,3 +22,5 @@ heuristic game = value (piecesOf White game.board) - value (piecesOf Black game.
 
     threatScore :: [Some PlacedPiece] -> Int
     threatScore pieces_ = sum [length (threats p game.board) | (Some p) <- pieces_]
+
+{-# INLINE heuristic #-}

@@ -52,6 +52,7 @@ executables:
       - -threaded
       - -eventlog
       - -rtsopts
+      - -O2
 
     dependencies:
       - AlphaGambit
