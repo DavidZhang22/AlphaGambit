@@ -1,4 +1,4 @@
-module Functions.Search (randomCommand, minimax, jamboree, minimaxPar) where
+module Functions.Search (randomCommand, minimax, jamboree, minimaxPar, alphaBeta) where
 
 import Chess
 import Chess.Color
@@ -9,7 +9,9 @@ import Functions.Scoring (heuristic)
 import Functions.States (nextStates)
 
 randomCommand :: Game -> Update
-randomCommand game = head $ nextStates game
+randomCommand game =
+  let states = nextStates game
+   in states !! (length states `div` 2)
 
 findMinTuple :: [(Int, Update)] -> (Int, Update)
 findMinTuple = minimumBy (compare `on` fst)
@@ -73,3 +75,42 @@ jamboreee game a b depth   | firstVal >= b = firstVal
 
     firstVal = -jamboreee (head possibleMoves).game (-a) (-b) (depth - 1)
     possibleMoves = nextStates game
+
+
+-- Adapted from https://maksmozolewski.co.uk/blog/min-max-alpha-beta-pruning-dfs-bfs-haskell/
+alphaBeta :: Game -> Int -> Player -> Update
+alphaBeta game depth player
+  | player.color == Chess.Color.White = snd $ findMaxTuple $ map (\update -> (minValue update.game (depth-1) (-2) 2, update)) (nextStates game)
+  | otherwise = snd $ findMinTuple $ map (\update -> (maxValue update.game (depth-1) (-2) 2, update)) (nextStates game)
+  where
+    maxValue :: Game -> Int -> Int -> Int -> Int
+    maxValue game 0 _ _ = heuristic game
+    maxValue game depth a b =
+      let states = reverse $ nextStates game
+
+          getMinimaxAndAlpha :: (Int, Int) -> Update -> (Int, Int)
+          getMinimaxAndAlpha (bestMinimaxVal, a) update =
+            let newMinimax = max bestMinimaxVal (minValue update.game (depth - 1) a b)
+             in (newMinimax, max a newMinimax)
+
+          (bestMinimax, newAlpha) = takeFirstWithOrLastElem (\(v, a) -> v >= b) $ scanl getMinimaxAndAlpha (-2, a) states
+       in bestMinimax
+    minValue :: Game -> Int -> Int -> Int -> Int
+    minValue _ 0 _ _ = heuristic game
+    minValue game depth a b =
+      let states = reverse $ nextStates game
+
+          getMinimaxAndBeta :: (Int, Int) -> Update -> (Int, Int)
+          getMinimaxAndBeta (bestMinimaxVal, b) update =
+            let newMinimax = min bestMinimaxVal (maxValue update.game (depth - 1) a b)
+             in (newMinimax, min b newMinimax)
+
+          (bestMinimax, newBeta) =
+            takeFirstWithOrLastElem (\(v, b) -> v <= a) $
+              scanl getMinimaxAndBeta (2, b) states
+       in bestMinimax
+
+-- will take the first element satisfying the condition, or the last element if none do (last wont be checked)
+takeFirstWithOrLastElem :: (a -> Bool) -> [a] -> a
+takeFirstWithOrLastElem cond [x] = x
+takeFirstWithOrLastElem cond (x : xs) = if cond x then x else takeFirstWithOrLastElem cond xs

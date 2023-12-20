@@ -2,8 +2,7 @@ module Main (main) where
 
 import Chess
 import Chess.Rulebook.Standard (standardRulebook)
-import Functions.Search (minimaxPar, randomCommand)
-import Lib (generateGame, minimax, jamboree)
+import Lib (generateGame, minimax, jamboree, alphaBeta, minimaxPar, randomCommand)
 import System.Environment (getArgs, getProgName)
 import System.Exit (die)
 import System.IO (hSetBuffering, stdout, BufferMode (LineBuffering))
@@ -26,7 +25,12 @@ main = do
     ["jamboree", d] -> do
       let game = generateGame
       let minimaxUpdate = jamboree game (read d :: Int) game.activePlayer
-      putStrLn "Minimax update:"
+      putStrLn "Jamboree update:"
+      print minimaxUpdate.command
+    ["alpha_beta", d] -> do
+      let game = generateGame
+      let minimaxUpdate = alphaBeta game (read d :: Int) game.activePlayer
+      putStrLn "Alpha-Beta update:"
       print minimaxUpdate.command
     ["play"] -> do
       let game = generateGame

@@ -5,6 +5,8 @@ module Lib
   ( generateGame,
     jamboree,
     minimax,
+    minimaxPar,
+    alphaBeta,
     randomCommand,
     heuristic,
     nextStates,
@@ -13,7 +15,7 @@ where
 
 import Chess
 import Functions.Scoring (heuristic)
-import Functions.Search (jamboree, minimax, randomCommand)
+import Functions.Search (jamboree, minimax, minimaxPar, randomCommand, alphaBeta)
 import Functions.States (generateGame, nextStates)
 
 instance Show Board where
