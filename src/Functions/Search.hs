@@ -84,29 +84,29 @@ alphaBeta game depth player
   | otherwise = snd $ findMinTuple $ map (\update -> (maxValue update.game (depth-1) (-2) 2, update)) (nextStates game)
   where
     maxValue :: Game -> Int -> Int -> Int -> Int
-    maxValue game 0 _ _ = heuristic game
-    maxValue game depth a b =
-      let states = reverse $ nextStates game
+    maxValue g 0 _ _ = heuristic g
+    maxValue g d a b =
+      let states = reverse $ nextStates g
 
           getMinimaxAndAlpha :: (Int, Int) -> Update -> (Int, Int)
-          getMinimaxAndAlpha (bestMinimaxVal, a) update =
-            let newMinimax = max bestMinimaxVal (minValue update.game (depth - 1) a b)
+          getMinimaxAndAlpha (bestMinimaxVal, _) update =
+            let newMinimax = max bestMinimaxVal (minValue update.game (d - 1) a b)
              in (newMinimax, max a newMinimax)
 
-          (bestMinimax, newAlpha) = takeFirstWithOrLastElem (\(v, a) -> v >= b) $ scanl getMinimaxAndAlpha (-2, a) states
+          (bestMinimax, _) = takeFirstWithOrLastElem (\(v, _) -> v >= b) $ scanl getMinimaxAndAlpha (-2, a) states
        in bestMinimax
     minValue :: Game -> Int -> Int -> Int -> Int
     minValue _ 0 _ _ = heuristic game
-    minValue game depth a b =
-      let states = reverse $ nextStates game
+    minValue g d a b =
+      let states = reverse $ nextStates g
 
           getMinimaxAndBeta :: (Int, Int) -> Update -> (Int, Int)
           getMinimaxAndBeta (bestMinimaxVal, b) update =
-            let newMinimax = min bestMinimaxVal (maxValue update.game (depth - 1) a b)
+            let newMinimax = min bestMinimaxVal (maxValue update.game (d - 1) a b)
              in (newMinimax, min b newMinimax)
 
-          (bestMinimax, newBeta) =
-            takeFirstWithOrLastElem (\(v, b) -> v <= a) $
+          (bestMinimax, _) =
+            takeFirstWithOrLastElem (\(v, _) -> v <= a) $
               scanl getMinimaxAndBeta (2, b) states
        in bestMinimax
 
