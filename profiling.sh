@@ -22,20 +22,19 @@ run_and_record() {
 }
 
 # Headers for CSV files
-echo "mode,depth,duration" > runtimes/parallel_minimax.csv
-echo "mode,depth,duration" > runtimes/sequential_minimax.csv
 
+modes=("parallel sequential alpha_beta jamboree")
+
+# for mode in $modes; do
+#     echo "mode,depth,duration" > new_runtimes/${mode}.csv
+# done
 
 # Run the executable once to warm it up
 stack exec --silent $executable parallel 1
 
 # Loop through all combinations of mode and depth
-for mode in parallel sequential; do
+for mode in $modes; do
     for depth in {1..5}; do
-        if [ "$mode" == "parallel" ]; then
-            run_and_record $mode $depth runtimes/parallel_minimax.csv
-        else
-            run_and_record $mode $depth runtimes/sequential_minimax.csv
-        fi
+        run_and_record $mode $depth new_runtimes/${mode}.csv
     done
 done
