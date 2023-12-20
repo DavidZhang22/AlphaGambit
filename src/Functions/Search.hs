@@ -53,8 +53,8 @@ minimaxPar game depth player
 jamboree :: Game -> Int -> Player -> Update
 
 jamboree game depth player
-  | player.color == Chess.Color.White = snd $ findMaxTuple $ map (\update -> (jamboreee  update.game 10000 (-10000) (depth - 1), update)) (nextStates game)
-  | otherwise = snd $ findMinTuple $ map (\update -> (jamboreee  update.game 10000 (-10000) (depth - 1), update)) (nextStates game)
+  | player.color == Chess.Color.White = snd $ findMaxTuple $ map (\update -> (jamboreee  update.game (-10000) 10000 (depth - 1), update)) (nextStates game)
+  | otherwise = snd $ findMinTuple $ map (\update -> (jamboreee  update.game (-10000) 10000 (depth - 1), update)) (nextStates game)
 
 
 jamboreee :: Game -> Int -> Int -> Int -> Int
