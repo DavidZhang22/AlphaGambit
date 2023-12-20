@@ -10,8 +10,8 @@ description:    Please see the README on GitHub at <https://github.com/githubuse
 homepage:       https://github.com/githubuser/AlphaGambit#readme
 bug-reports:    https://github.com/githubuser/AlphaGambit/issues
 author:         Author name here
-maintainer:     example@example.com
-copyright:      2023 Author name here
+maintainer:     davidwz2003@yahoo.com
+copyright:      2023 AlphaGambit
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
@@ -58,7 +58,7 @@ executable AlphaGambit-exe
       OverloadedRecordDot
       DuplicateRecordFields
       NoFieldSelectors
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N -funfolding-use-threshold=16 -O2 -optc-O3
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -eventlog -rtsopts
   build-depends:
       AlphaGambit
     , base >=4.7 && <5

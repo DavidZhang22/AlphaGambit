@@ -37,7 +37,7 @@ main = do
       playGame game
     _ -> do
       name <- getProgName
-      die $ "Usage: " ++ name ++ " <sequential|parallel> <depth=1,2,3,4,5> OR " ++ name ++ " play"
+      die $ "Usage: " ++ name ++ " <sequential|parallel|jamboree|alpha_beta> <depth=1,2,3,4,5> OR " ++ name ++ " play"
 
 playGame :: Game -> IO ()
 playGame g = case standardRulebook.status g of

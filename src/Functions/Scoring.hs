@@ -5,15 +5,11 @@ import Chess
 import Chess.Rulebook.Standard.Threat
 
 
-foldl' _ z []    = z
-foldl' f z (x:xs) = let z' = z `f` x 
-                     in seq z' $ foldl' f z' xs
-
 -- Heuristic returns a positive score if white is winning, and a negative score if black is winning.
 heuristic :: Game -> Int
 heuristic game = value (piecesOf White game.board) - value (piecesOf Black game.board)
   where
-    value pieces_ = foldl' (+) 0 [pieceValue piece | piece <- pieces_] + threatScore pieces_
+    value pieces_ = sum [pieceValue piece | piece <- pieces_] + threatScore pieces_
     pieceValue :: Some PlacedPiece -> Int
     pieceValue (Some (PlacedPiece _ (Piece piece _))) =
       case piece of
@@ -25,4 +21,4 @@ heuristic game = value (piecesOf White game.board) - value (piecesOf Black game.
         King -> 1000
 
     threatScore :: [Some PlacedPiece] -> Int
-    threatScore pieces_ = foldl' (+) 0  [length (threats p game.board) | (Some p) <- pieces_]
+    threatScore pieces_ = sum [length (threats p game.board) | (Some p) <- pieces_]

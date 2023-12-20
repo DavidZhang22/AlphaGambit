@@ -3,8 +3,8 @@ version: 0.1.0.0
 github: "githubuser/AlphaGambit"
 license: BSD-3-Clause
 author: "Author name here"
-maintainer: "example@example.com"
-copyright: "2023 Author name here"
+maintainer: "davidwz2003@yahoo.com"
+copyright: "2023 AlphaGambit"
 language: GHC2021
 
 extra-source-files:
@@ -50,11 +50,9 @@ executables:
     source-dirs: app
     ghc-options:
       - -threaded
+      - -eventlog
       - -rtsopts
-      - -with-rtsopts=-N
-      - -funfolding-use-threshold=16 
-      - -O2 
-      - -optc-O3
+
     dependencies:
       - AlphaGambit
 
