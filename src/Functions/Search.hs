@@ -64,14 +64,14 @@ jamboreee game a b depth   | firstVal >= b = firstVal
                           | otherwise = jamboree2 (max firstVal a) b firstVal
   where
     jamboree2 :: Int -> Int -> Int -> Int
-    jamboree2 alpha beta bb = maximum (map (\update-> result (-jamboreee update.game (-alpha-1) (-alpha) (depth - 1))) possibleMoves)
+    jamboree2 alpha beta bb = maximum (map (\update-> result (-jamboreee update.game (-alpha-1) (-alpha) (depth - 1))) possibleMoves `using` parList rseq )
       where
         result :: Int -> Int
         result res | res >= beta = res
                    | val >= beta = val
                    | otherwise = max (max val res) bb
           where
-            val = maximum (map (\update->(-jamboreee update.game (-beta) (-alpha) (depth - 1))) possibleMoves)
+            val = maximum (map (\update->(-jamboreee update.game (-beta) (-alpha) (depth - 1))) possibleMoves `using` parList rseq)
 
     firstVal = -jamboreee (head possibleMoves).game (-a) (-b) (depth - 1)
     possibleMoves = nextStates game
