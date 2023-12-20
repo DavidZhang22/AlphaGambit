@@ -5,6 +5,7 @@ import Chess
 import Chess.Rulebook.Standard.Threat
 
 
+foldl' :: (t1 -> t2 -> t1) -> t1 -> [t2] -> t1
 foldl' _ z []    = z
 foldl' f z (x:xs) = let z' = z `f` x 
                      in seq z' $ foldl' f z' xs

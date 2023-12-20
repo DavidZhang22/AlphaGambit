@@ -25,13 +25,13 @@ minimax game depth player
   | player.color == Chess.Color.Black = snd $ findMinTuple $ map (\update -> (max_ (depth - 1) update.game, update)) (nextStates game)
   where
     max_ :: Int -> Game -> Int
-    max_ 0 game = heuristic game
-    max_ depth game = maximum (map (\update -> min_ (depth - 1) update.game) (nextStates game))
+    max_ 0 game_ = heuristic game_
+    max_ depth_ game_ = maximum (map (\update -> min_ (depth_ - 1) update.game) (nextStates game_))
 
     min_ :: Int -> Game -> Int
-    min_ 0 game = heuristic game
-    min_ depth game = minimum (map (\update -> max_ (depth - 1) update.game) (nextStates game))
-
+    min_ 0 game_ = heuristic game_
+    min_ depth_ game_ = minimum (map (\update -> max_ (depth_ - 1) update.game) (nextStates game_))
+minimax game _ _ = snd $ head $ map (\update -> (update, update)) (nextStates game)
 -- TODO: implement this
 
 minimaxPar :: Game -> Int -> Player -> Update
@@ -101,9 +101,9 @@ alphaBeta game depth player
       let states = reverse $ nextStates g
 
           getMinimaxAndBeta :: (Int, Int) -> Update -> (Int, Int)
-          getMinimaxAndBeta (bestMinimaxVal, b) update =
-            let newMinimax = min bestMinimaxVal (maxValue update.game (d - 1) a b)
-             in (newMinimax, min b newMinimax)
+          getMinimaxAndBeta (bestMinimaxVal, b_) update =
+            let newMinimax = min bestMinimaxVal (maxValue update.game (d - 1) a b_)
+             in (newMinimax, min b_ newMinimax)
 
           (bestMinimax, _) =
             takeFirstWithOrLastElem (\(v, _) -> v <= a) $
@@ -112,5 +112,6 @@ alphaBeta game depth player
 
 -- will take the first element satisfying the condition, or the last element if none do (last wont be checked)
 takeFirstWithOrLastElem :: (a -> Bool) -> [a] -> a
-takeFirstWithOrLastElem cond [x] = x
+takeFirstWithOrLastElem _ [x] = x
 takeFirstWithOrLastElem cond (x : xs) = if cond x then x else takeFirstWithOrLastElem cond xs
+takeFirstWithOrLastElem _ [] = error "Empty list given"
