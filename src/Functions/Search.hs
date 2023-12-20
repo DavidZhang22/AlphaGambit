@@ -2,7 +2,6 @@ module Functions.Search (randomCommand, minimax, jamboree, minimaxPar) where
 
 import Chess
 import Chess.Color
-import Chess.Rulebook.Standard.Check (checked)
 import Control.Parallel.Strategies
 import Data.Function (on)
 import Data.List (maximumBy, minimumBy)
@@ -46,7 +45,31 @@ minimaxPar game depth player
     min_ 0 game1 = heuristic game1
     min_ d game2 = minimum (map (\update -> max_ (d - 1) update.game) (nextStates game2) `using` parList rseq)
 
-jamboree :: Game -> Int -> Int -> Player -> Update
-jamboree game _ _ _ = randomCommand game -- TODO: implement this
 
--- https://maksmozolewski.co.uk/blog/min-max-alpha-beta-pruning-dfs-bfs-haskell/
+
+
+jamboree :: Game -> Int -> Player -> Update
+
+jamboree game depth player
+  | player.color == Chess.Color.White = snd $ findMaxTuple $ map (\update -> (jamboreee  update.game 10000 (-10000) (depth - 1), update)) (nextStates game)
+  | otherwise = snd $ findMinTuple $ map (\update -> (jamboreee  update.game 10000 (-10000) (depth - 1), update)) (nextStates game)
+
+
+jamboreee :: Game -> Int -> Int -> Int -> Int
+
+jamboreee game _ _ 0 = heuristic game
+jamboreee game a b depth   | firstVal >= b = firstVal
+                          | otherwise = jamboree2 (max firstVal a) b firstVal
+  where
+    jamboree2 :: Int -> Int -> Int -> Int
+    jamboree2 alpha beta bb = maximum (map (\update-> result (-jamboreee update.game (-alpha-1) (-alpha) (depth - 1))) possibleMoves)
+      where
+        result :: Int -> Int
+        result res | res >= beta = res
+                   | val >= beta = val
+                   | otherwise = max (max val res) bb
+          where
+            val = maximum (map (\update->(-jamboreee update.game (-beta) (-alpha) (depth - 1))) possibleMoves)
+
+    firstVal = -jamboreee (head possibleMoves).game (-a) (-b) (depth - 1)
+    possibleMoves = nextStates game

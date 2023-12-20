@@ -19,6 +19,7 @@ main = do
 
   -- this is actually deterministic so score should not be zero.
   putStrLn $ if score /= 0 then "OK" else "FAIL!"
+  putStrLn $ "Score: " ++ show score
 
   -- TEST 2: Next States function works
 --   let potentialNextStates = nextStates loop100

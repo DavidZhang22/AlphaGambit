@@ -52,6 +52,9 @@ executables:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+      - -funfolding-use-threshold=16 
+      - -O2 
+      - -optc-O3
     dependencies:
       - AlphaGambit
 
