@@ -9,5 +9,4 @@ Haskell implementation of search algorithms for chess.
 The other files perform auxiliary functions based on the outputs of this executable: 
 
 - `runtimes` contains runtime data for some runs of the AlphaGambit executable -- predicting a single move at various depths. 
-- `sample_games` contains some contests between different pairs of algorithms.
 - `visuals` contains Python scripts for generating
