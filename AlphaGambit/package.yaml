@@ -1,0 +1,60 @@
+name: AlphaGambit
+version: 0.1.0.0
+github: "githubuser/AlphaGambit"
+license: BSD-3-Clause
+author: "Author name here"
+maintainer: "example@example.com"
+copyright: "2023 Author name here"
+language: GHC2021
+
+extra-source-files:
+  - README.md
+
+dependencies:
+  - base >= 4.7 && < 5
+  - chessica
+  - parallel
+
+default-extensions:
+  - OverloadedRecordDot
+  - DuplicateRecordFields
+  - NoFieldSelectors
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Widentities
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wmissing-export-lists
+  - -Wmissing-home-modules
+  - -Wpartial-fields
+  - -Wredundant-constraints
+
+library:
+  source-dirs: src
+
+executables:
+  AlphaGambit-exe:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -funfolding-use-threshold=16
+      - -O2
+      - -optc-O3
+    dependencies:
+      - AlphaGambit
+
+tests:
+  AlphaGambit-test:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - AlphaGambit
