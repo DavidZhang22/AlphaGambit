@@ -2,7 +2,7 @@ module Main (main) where
 
 import Chess
 import Chess.Rulebook.Standard (standardRulebook)
-import Lib (generateGame, minimax, jamboree, alphaBeta, minimaxPar, randomCommand)
+import Lib (generateGame, minimax, jamboree, alphaBeta, minimaxPar)
 import System.Environment (getArgs, getProgName)
 import System.Exit (die)
 import System.IO (hSetBuffering, stdout, BufferMode (LineBuffering))
@@ -37,17 +37,17 @@ main = do
       playGame game
     _ -> do
       name <- getProgName
-      die $ "Usage: " ++ name ++ " <sequential|parallel|jamboree|alpha_beta> <depth=1,2,3,4,5> OR " ++ name ++ " play"
+      die $ "Usage: " ++ name ++ " <sequential|parallel|jamboree|alpha_beta> <depth> OR " ++ name ++ " play"
 
 playGame :: Game -> IO ()
 playGame g = case standardRulebook.status g of
   Win player -> putStrLn $ "Win for " ++ show player.color
   Draw -> putStrLn "Draw"
   Turn (Player White) -> do
-    let (Update game command) = minimaxPar g 4 g.activePlayer
+    let (Update game _) = minimaxPar g 4 g.activePlayer
     print game.board
     playGame game
   Turn (Player Black) -> do
-    let (Update game command) = minimaxPar g 4 g.activePlayer
+    let (Update game _) = minimaxPar g 4 g.activePlayer
     print game.board
     playGame game

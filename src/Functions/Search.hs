@@ -31,7 +31,7 @@ minimax game depth player
     min_ :: Int -> Game -> Int
     min_ 0 game_ = heuristic game_
     min_ depth_ game_ = minimum (map (\update -> max_ (depth_ - 1) update.game) (nextStates game_))
-minimax game _ _ = snd $ head $ map (\update -> (update, update)) (nextStates game)
+
 -- TODO: implement this
 
 minimaxPar :: Game -> Int -> Player -> Update
@@ -41,12 +41,13 @@ minimaxPar game depth player
   where
     max_ :: Int -> Game -> Int
     max_ 0 game1 = heuristic game1
-    max_ d game2 = maximum (map (\update -> min_ (d - 1) update.game) (nextStates game2) `using` parListChunk 200 rdeepseq)
+    max_ d game2 = maximum (map (\update -> min_ (d - 1) update.game) (nextStates game2) `using` parList rseq)
+
+      
 
     min_ :: Int -> Game -> Int
     min_ 0 game1 = heuristic game1
-    min_ d game2 = minimum (map (\update -> max_ (d - 1) update.game) (nextStates game2) `using` parListChunk 200 rdeepseq)
-
+    min_ d game2 = minimum (map (\update -> max_ (d - 1) update.game) (nextStates game2) `using` parList rseq)
 
 
 
@@ -65,14 +66,14 @@ jamboreee game a b depth   | firstVal >= b = firstVal
                            | otherwise = jamboree2 (max firstVal a) b firstVal
   where
     jamboree2 :: Int -> Int -> Int -> Int
-    jamboree2 alpha beta bb = maximum (map (\update-> result (-jamboreee update.game (-alpha-1) (-alpha) (depth - 1))) possibleMoves `using` parListChunk 500 rseq )
+    jamboree2 alpha beta bb = maximum (map (\update-> result (-jamboreee update.game (-alpha-1) (-alpha) 1)) possibleMoves `using` parList rseq )
       where
         result :: Int -> Int
         result res | res >= beta = res
                    | val >= beta = val
                    | otherwise = max (max val res) bb
           where
-            val = maximum (map (\update->(-jamboreee update.game (-beta) (-alpha) (depth - 1))) possibleMoves `using` parListChunk 500 rseq)
+            val = maximum (map (\update->(-jamboreee update.game (-beta) (-alpha) (depth - 1))) possibleMoves `using` parList rseq)
 
     firstVal = -jamboreee (head possibleMoves).game (-a) (-b) (depth - 1)
     possibleMoves = nextStates game

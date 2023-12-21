@@ -9,7 +9,7 @@ module Lib
     alphaBeta,
     randomCommand,
     heuristic,
-    nextStates,
+    nextStates
   )
 where
 

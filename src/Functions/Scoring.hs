@@ -5,6 +5,7 @@ import Chess
 import Chess.Rulebook.Standard.Threat
 
 
+
 -- Heuristic returns a positive score if white is winning, and a negative score if black is winning.
 heuristic :: Game -> Int
 heuristic game = value (piecesOf White game.board) - value (piecesOf Black game.board)
