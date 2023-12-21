@@ -58,7 +58,7 @@ executable AlphaGambit-exe
       OverloadedRecordDot
       DuplicateRecordFields
       NoFieldSelectors
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -eventlog -rtsopts -O2
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -O2
   build-depends:
       AlphaGambit
     , base >=4.7 && <5

@@ -15,12 +15,12 @@ main = do
     ["sequential", d] -> do
       let game = generateGame
       let minimaxUpdate = minimax game (read d :: Int) game.activePlayer
-      putStrLn "Minimax update:"
+      putStrLn "Sequential Minimax update:"
       print minimaxUpdate.command
     ["parallel", d] -> do
       let game = generateGame
       let minimaxUpdate = minimaxPar game (read d :: Int) game.activePlayer
-      putStrLn "Minimax update:"
+      putStrLn "Parallel Minimax update:"
       print minimaxUpdate.command
     ["jamboree", d] -> do
       let game = generateGame
