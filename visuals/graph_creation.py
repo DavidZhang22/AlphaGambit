@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 # %%
-csv_dir = '../runtimes/'
-new_csv_dir = '../new_runtimes/'
+csv_dir = '../runtimes/heuristic1_runtimes/'
+new_csv_dir = '../runtimes/'
 sequential_path = 'sequential_minimax.csv'
 alpha_beta_path = 'alpha_beta.csv'
 parallel_path = 'parallel_minimax.csv'

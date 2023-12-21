@@ -51,7 +51,7 @@ sample_position = '''
 # chessboard_image = chessboard_to_image(sample_position)
 # chessboard_image.save('chessboard_image_with_filled_grid.jpg')
 
-with open('../output.txt', 'r', encoding='utf-8') as file:
+with open('../sample_games/minimax_vs_random.txt', 'r', encoding='utf-8') as file:
     contents = file.read()
 
 
